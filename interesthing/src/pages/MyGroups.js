@@ -1,16 +1,12 @@
 import { useEffect,useState } from 'react'
+import GroupList from '../components/groupList'
+        
 
 const MyGroups = () => {
-  const[courses, setCourses] = useState('')
-  const[coursesDefault, setCoursesDefault] = useState('')
-  const [input, setInput] = useState('');
-
 
   return (
-    <div className="home">
-      <div className="course-detail">
-        <h1>Hello mygroup</h1>
-      </div>
+    <div>
+        <GroupList />
     </div>
   )
 }
