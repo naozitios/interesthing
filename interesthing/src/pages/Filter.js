@@ -1,5 +1,5 @@
 import { Fragment, useState } from "react";
-import { useQuery, useMutation } from "react-query";
+import { useQuery } from "react-query";
 import { Dialog, Disclosure, Popover, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
@@ -68,7 +68,15 @@ const footer = (
 );
 
 const Filter = () => {
-  const { isLoading, error, data } = useQuery("groupsData", async () => {});
+  const fetchGroups = async () =>
+    await axios.get(`http://127.0.0.1:5000/?hobby=${search}`);
+
+  const { data, refetch } = useQuery("groupsData", fetchGroups, {
+    refetchOnWindowFocus: false,
+    enabled: false,
+    initialData: [],
+  });
+
   const [search, setSearch] = useState("");
   const [selectedOptions, setSelectedOptions] = useState([]);
 
@@ -86,15 +94,12 @@ const Filter = () => {
     }
   };
 
-  const mutation = useMutation((search) => axios.post("/api/hpp", search));
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(`search: ${search}, selectedOptions: ${selectedOptions}`);
-    //search handler mutate
-    mutation.mutate(search);
+    refetch();
   };
 
+  console.log(data);
   return (
     <div className="pt-10">
       <div className="mx-auto max-w-7xl sm:px-2 lg:px-8">
