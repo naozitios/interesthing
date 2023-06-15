@@ -8,6 +8,7 @@ import FilterTab from "./pages/FilterTab"
 import CreateGroup from "./pages/CreateGroup"
 import MyGroups from "./pages/MyGroups"
 import Schedule from "./pages/Schedule"
+import GroupPage from './pages/GroupPage';
         
 
 function App() {
@@ -25,6 +26,12 @@ function App() {
             <Route
               path="/filter"
               element={<FilterTab />}
+              //NOT enabling the user authentication check first because i(yuhao) cannot log in
+              // element={<Review />}
+            />
+            <Route
+              path="/valulrant"
+              element={<GroupPage />}
               //NOT enabling the user authentication check first because i(yuhao) cannot log in
               // element={<Review />}
             />
