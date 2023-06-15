@@ -1,4 +1,6 @@
 import { useRef, useState } from "react";
+import axios from "axios";
+import { v4 as uuid } from "uuid";
 
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
@@ -6,16 +8,39 @@ import { FileUpload } from "primereact/fileupload";
 import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
 
-/*
-group_id: ""
-category: ""
-description: ""
-group_leader: ""
-group_name: ""
-img_s3_url: ""
-*/
-
 const CreateGroup = () => {
+  const DUMMY_SID = "G123456";
+  const DUMMY_IMG = "fill_in_l8tr";
+
+  const onFormSubmit = (e) => {
+    e.preventDefault();
+
+    const data = new FormData();
+
+    const unique_id = uuid();
+    data.append("Group_id", unique_id);
+    data.append("category", category);
+    data.append("description", description);
+    data.append("group_leader", DUMMY_SID);
+    data.append("group_name", name);
+    data.append("img_s3_url", DUMMY_IMG);
+
+    console.log(data);
+
+    axios
+      .put("http://localhost:8080/create-group", JSON.stringify(data), {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log("Error:", err);
+      });
+  };
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState([]);
@@ -94,7 +119,7 @@ const CreateGroup = () => {
           />
         </div>
       </div>
-      <Button onClick={submitForm} label={"Submit"} />
+      <Button onClick={onFormSubmit} label={"Submit"} />
     </div>
   );
 };
