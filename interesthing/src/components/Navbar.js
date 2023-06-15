@@ -7,6 +7,9 @@ import "primereact/resources/themes/lara-light-indigo/theme.css";
 //core
 import "primereact/resources/primereact.min.css";
 
+// primeflex
+import "primeflex/primeflex.css";
+
 const Navbar = () => {
   const navigate = useNavigate();
   const items = [
