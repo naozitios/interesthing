@@ -6,7 +6,6 @@ import "primereact/resources/themes/lara-light-indigo/theme.css";
 
 //core
 import "primereact/resources/primereact.min.css";
-import FilterTab from "../pages/FilterTab";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -19,8 +18,8 @@ const Navbar = () => {
       },
     },
     {
-      label: "Filter",
-      icon: "pi pi-fw pi-calendar",
+      label: "Groups",
+      icon: "pi pi-fw pi-search",
       command: () => {
         navigate("/filter");
       },
