@@ -7,62 +7,62 @@ import { Button } from "primereact/button";
 import "primeflex/primeflex.css";
 const SCHEDULES = [
   {
-    name: <p>Football</p>,
-    where: <p>Kallang Cage</p>,
-    when: <p>17/12/2023 -- 17:00 to 18:00</p>,
-    duration: <p>1 hour</p>,
-    info: (
-      <p>Session for people to chill and have fun after a long day of work </p>
+    group_name: "Football",
+    session_location: "Kallang Cage Pitch 5",
+    session_info: (
+      "Session for people to chill and have fun after a long day at work" 
     ),
-    image: (
-      <img
-        alt="Card"
-        src="https://corsivacdncontent.blob.core.windows.net/thecage/kallang/kl-5-a-side-2.jpg"
-        height="300vw"
-      />
-    ),
+    img_s3_url : ("https://corsivacdncontent.blob.core.windows.net/thecage/kallang/kl-5-a-side-2.jpg"),
+    session_start_date: ("17/12/2023 -- 17:00"),
+    session_end_date: ("17/12/2023 -- 18:00"),
   },
   {
-    name: <p>Flower Arrangement</p>,
-    where: <p>Orchard Convention Centre Level 7 Hall 2</p>,
-    when: <p>18/12/2023 -- 18:00 to 19:00</p>,
-    duration: <p>1 hour</p>,
-    info: (
-      <p>
-        For like-minded individuals who are passionate in flower arrangements
-      </p>
+    group_name: "Flower Arrangement",
+    session_location: "Orchard Convention Centre Level 7 Hall 2",
+    session_info: (
+        "For like-minded individuals who are passionate in flower arrangements"
     ),
-    image: (
-      <img
-        alt="Card"
-        src="https://www.marthastewart.com/thmb/rQl9aSHswycno7AMQOtffvt7w0I=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/flower-arrangement-blue-103343804-onecms-horiz-0223-257c5c7d9536496fa4c89549808d5c56.jpg"
-        height="300vw"
-      />
+    img_s3_url: (
+      "https://www.marthastewart.com/thmb/rQl9aSHswycno7AMQOtffvt7w0I=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/flower-arrangement-blue-103343804-onecms-horiz-0223-257c5c7d9536496fa4c89549808d5c56.jpg"
     ),
+    session_start_date: ("17/12/2023 -- 17:00"),
+    session_end_date: ("17/12/2023 -- 18:00"),
   },
 ];
 const Schedule = () => {
-  const [State, setState] = useState("");
+  const [visible, setVisible] = useState(true);
+  const removeElement = () => {
+    setVisible((prev) => !prev);
+    console.log("Clicked");
+    // TODO: trigger endpoint to remove the data 
+  };
 
-  const footer = (
-    <div className="flex flex-wrap justify-content-center gap-2">
-      <Button label="Cancel" severity="danger" />
-    </div>
-  );
   return (
     <div className="home">
       <div className="flex flex-row flex-wrap gap-7 align-items-center justify-content-center p-7">
         {SCHEDULES.map((item, index) => (
           <Card
-            title={item.name}
-            subTitle={item.where}
-            footer={footer}
-            header={item.image}
+            title={item.group_name}
+            subTitle={item.session_location}
+            // footer={footer}
+            header= <img
+            alt="Card"
+            src= {item.img_s3_url}
+            height="300vw"
+          />
             className="md:w-30rem"
           >
-            {item.info}
-            {item.when}
-            <p class="font-bold">Duration:</p> {item.duration}
+            {item.session_info}
+            <br/>
+            <p>{item.session_start_date} to {item.session_end_date}</p>
+            <p className="font-bold">Duration: <p>1 hour</p> </p> {item.duration}
+            <div className="flex flex-wrap justify-content-center gap-2">
+              <Button
+                label="Cancel"
+                severity="info"
+                onClick={removeElement}
+              />
+            </div>
           </Card>
         ))}
       </div>
