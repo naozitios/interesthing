@@ -33,7 +33,8 @@ def create_group():
             "description": "basketball for life",
             "group_leader": "D641038",
             "group_name": "basketball",
-            "img_s3_url": "s3.url.com"
+            "img_s3_url": "s3.url.com",
+            "joined" "false"
             }
     }
     '''
@@ -43,7 +44,7 @@ def create_group():
 
 
 @app.route("/create-group-w-img", methods=['PUT'])
-def create_group():
+def create_group_w_img():
     '''
     sample json 
     {
@@ -90,7 +91,7 @@ def get_all_data():
     return db_data
 
 # Group leader
-@app.route("/get-data-by-sid", methods=['GET'])
+@app.route("/get-data-by-sid", methods=['POST'])
 def get_data_by_sid():
     '''
     sample json
@@ -100,7 +101,6 @@ def get_data_by_sid():
     '''
     data = request.get_json()
     sid = data['sid']
-
 
     db_data = requests.get(GROUP_URL).json()
     all_data = db_data['body']
@@ -113,9 +113,9 @@ def get_data_by_sid():
         if group_leader_s == sid:
             new_arr.append(data)
 
-    return new_arr, 201
+    return json.dumps(new_arr), 201
 
-@app.route("/get-all-groups-by-group_name", methods=['GET'])
+@app.route("/get-all-groups-by-group_name", methods=['POST'])
 def get_all_groups_by_group_name():
     '''
     sample json
@@ -128,6 +128,11 @@ def get_all_groups_by_group_name():
     group_name = data['group_names']
     group_name_arr = group_name.split(',')
 
+    #for each name in arr, trim and lowercase
+    for i in range(len(group_name_arr)):
+        group_name_arr[i] = group_name_arr[i].strip().lower()
+
+
     db_data = requests.get(GROUP_URL).json()
     all_data = db_data['body']
     all_data_json = json.loads(all_data)
@@ -136,16 +141,14 @@ def get_all_groups_by_group_name():
     for data in all_data_items:
         group_name = data['group_name']
         group_name_s = group_name['S']
-        if group_name_s in group_name_arr:
+        if group_name_s.lower() in group_name_arr:
             new_arr.append(data)
     
-    return new_arr, 201
+    return json.dumps(new_arr), 201
     
     
 @app.route("/get-all-groups-by-joined", methods=['GET'])
 def get_all_groups_by_joined():
-    data = request.get_json()
-    
     db_data = requests.get(GROUP_URL).json()
     all_data = db_data['body']
     all_data_json = json.loads(all_data)
@@ -157,24 +160,32 @@ def get_all_groups_by_joined():
         if join_status_s == 'true':
             new_arr.append(data)
 
-    return new_arr, 201
+    return json.dumps(new_arr), 201
 
 @app.route("/update-group-join-status-by-id", methods=['PUT'])
 def update_group_join_status_by_sid():
+    '''
+    sample json
+    {
+        "id": "brandon-test"
+    }
+    '''
     data = request.get_json()
     id = data['id']
 
-    db_data = requests.get(SESSION_URL).json()
+    db_data = requests.get(GROUP_URL).json()
     all_data = db_data['body']
     all_data_json = json.loads(all_data)
     all_data_items = all_data_json['Items']
     for data in all_data_items:
-        session_id = data['session_id']
-        session_id_s = session_id['S']
-        if session_id_s == id:
+        group_id = data['Group_id']
+        group_id_s = group_id['S']
+        if group_id_s == id:
             data['joined'] = 'true'
-            requests.put(SESSION_URL, json=data)
+            print(data)
+            requests.put(GROUP_URL, json=data)
             return "Success", 201
+    return "Failed", 400
 
 
 @app.route("/delete-group-by-id", methods=['DELETE'])
@@ -242,7 +253,7 @@ def get_all_session_by_sid():
         if group_id_s == g_id:
             new_arr.append(data)
 
-    return new_arr, 201
+    return json.dumps(new_arr), 201
 
 @app.route("/get-all-sessions-by-joined", methods=['GET'])
 def get_all_session_by_joined():
@@ -259,7 +270,7 @@ def get_all_session_by_joined():
         if join_status_s == 'true':
             new_arr.append(data)
 
-    return new_arr, 201
+    return json.dumps(new_arr), 201
 
 
 @app.route("/get-session-by-sid", methods=['GET'])
@@ -275,7 +286,7 @@ def get_session_by_sid():
         session_id = data['session_id']
         session_id_s = session_id['S']
         if session_id_s == sid:
-            return data, 201
+            return json.dumps(data), 201
 
     return "Not Found", 404
 
