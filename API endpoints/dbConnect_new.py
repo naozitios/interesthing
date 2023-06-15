@@ -237,8 +237,14 @@ def get_all_session():
     return db_data, 201
 
 
-@app.route("/get-all-sessions-by-group-sid", methods=['GET'])
+@app.route("/get-all-sessions-by-group-sid", methods=['POST'])
 def get_all_session_by_sid():
+    '''
+    sample json
+    {
+        "group_sid": "brandon-test"
+    }
+    '''
     data = request.get_json()
     g_id = data['group_sid']
     
@@ -257,8 +263,6 @@ def get_all_session_by_sid():
 
 @app.route("/get-all-sessions-by-joined", methods=['GET'])
 def get_all_session_by_joined():
-    data = request.get_json()
-    
     db_data = requests.get(SESSION_URL).json()
     all_data = db_data['body']
     all_data_json = json.loads(all_data)
@@ -273,10 +277,16 @@ def get_all_session_by_joined():
     return json.dumps(new_arr), 201
 
 
-@app.route("/get-session-by-sid", methods=['GET'])
+@app.route("/get-session-by-sid", methods=['POST'])
 def get_session_by_sid():
+    '''
+    sample json
+    {
+        "session_id": "brandon-test"
+    }
+    '''
     data = request.get_json()
-    sid = data['sid']
+    sid = data['session_id']
 
     db_data = requests.get(SESSION_URL).json()
     all_data = db_data['body']
