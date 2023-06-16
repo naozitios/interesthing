@@ -22,12 +22,11 @@ const CreateGroup = () => {
         description: description,
         group_leader: DUMMY_SID,
         group_name: name,
-        img_s3_url: imgSrc, // base 64 later
+        img_s3_url: "fill_l8tr",
         joined: false,
       },
     };
 
-    console.log(data);
     axios
       .put("http://localhost:8080/create-group", JSON.stringify(data), {
         // withCredentials: true,
