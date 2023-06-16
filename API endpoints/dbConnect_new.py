@@ -34,7 +34,7 @@ def create_group():
             "group_leader": "D641038",
             "group_name": "basketball",
             "img_s3_url": "s3.url.com",
-            "joined" "false"
+            "joined" : "false"
             }
     }
     '''
