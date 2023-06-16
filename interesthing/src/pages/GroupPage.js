@@ -4,25 +4,14 @@ import { DataView } from 'primereact/dataview';
 import { Rating } from 'primereact/rating';
 import { Tag } from 'primereact/tag';
 import { Card } from 'primereact/card';
+import { useParams } from 'react-router-dom';
 import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
 
 
 const GroupPage = () => {
-    const [sessions, setSessions] = useState([
-        {
-            "session_max_members": 10,
-            "session_info": "Join our discord here!",
-            "group_name":"valulrant",
-            "joined": true
-        },
-        {
-            "session_max_members": 5,
-            "session_info": "Quick ranked games for Irons",
-            "group_name":"valulrants",
-            "joined": false
-        }
-    ]);
+    let { groupID } = useParams();
+    const [sessions, setSessions] = useState();
     const handleJoin = async(e) => {
         const response = await fetch('', {
             method: 'POST',
@@ -36,15 +25,12 @@ const GroupPage = () => {
     const headers = { 'Access-Control-Allow-Origin': '*' }
     useEffect(() => {
         const fetchSessions = async () => {
-            const response = await fetch('http://localhost:8080/get-all-data', {headers: { 
-                'Access-Control-Allow-Origin': '*',
-                'Content-Type': 'application/json'
-              }})
+            const response = await fetch('http://localhost:8080/get-all-data')
             const json = await response.json()
         
             if (response.ok) {
                 console.log(json['body'])
-                setSessions(json)
+                setSessions(json['body'])
             } else {
                 console.log('failed')
             }

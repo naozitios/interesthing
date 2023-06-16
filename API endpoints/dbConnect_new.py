@@ -39,8 +39,9 @@ def create_group():
     }
     '''
     data = request.get_json()
-    requests.put(GROUP_URL, json=data)
-    return "Success", 201
+    req = requests.put(GROUP_URL, json=data)
+    req_data = req.json()
+    return str(req_data['statusCode'])
 
 
 @app.route("/create-group-w-img", methods=['PUT'])
@@ -88,7 +89,10 @@ def create_group_w_img():
 @app.route("/get-all-data", methods=['GET'])
 def get_all_data():
     db_data = requests.get(GROUP_URL).json()
-    return db_data
+    all_data = db_data['body']
+    all_data_json = json.loads(all_data)
+    all_data_items = all_data_json['Items']
+    return json.dumps(all_data_items), 201
 
 # Group leader
 @app.route("/get-data-by-sid", methods=['POST'])
@@ -156,9 +160,15 @@ def get_all_groups_by_joined():
     new_arr = []
     for data in all_data_items:
         join_status = data['joined']
-        join_status_s = join_status['S']
-        if join_status_s == 'true':
-            new_arr.append(data)
+        print(join_status)
+        try:
+            join_status_s = join_status['BOOL']
+            if join_status_s:
+                new_arr.append(data)
+        except:
+            join_status_s = join_status['S']
+            if join_status_s == 'true':
+                new_arr.append(data)
 
     return json.dumps(new_arr), 201
 
@@ -234,7 +244,10 @@ def create_session():
 @app.route("/get-all-sessions", methods=['GET'])
 def get_all_session():
     db_data = requests.get(SESSION_URL).json()
-    return db_data, 201
+    all_data = db_data['body']
+    all_data_json = json.loads(all_data)
+    all_data_items = all_data_json['Items']
+    return json.dumps(all_data_items), 201
 
 
 @app.route("/get-all-sessions-by-group-sid", methods=['POST'])
@@ -270,9 +283,14 @@ def get_all_session_by_joined():
     new_arr = []
     for data in all_data_items:
         join_status = data['joined']
-        join_status_s = join_status['S']
-        if join_status_s == 'true':
-            new_arr.append(data)
+        try:
+            join_status_s = join_status['BOOL']
+            if join_status_s:
+                new_arr.append(data)
+        except:
+            join_status_s = join_status['S']
+            if join_status_s == 'true':
+                new_arr.append(data)
 
     return json.dumps(new_arr), 201
 
