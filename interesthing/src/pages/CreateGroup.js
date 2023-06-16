@@ -10,22 +10,24 @@ import { Button } from "primereact/button";
 
 const CreateGroup = () => {
   const DUMMY_SID = "G123456";
-  const DUMMY_IMG = "fill_in_l8tr";
 
   const onFormSubmit = (e) => {
     e.preventDefault();
     const unique_id = uuid();
 
     const data = {
-      Group_id: unique_id,
-      category: category,
-      description: description,
-      group_leader: DUMMY_SID,
-      group_name: name,
-      img_s3_url: DUMMY_IMG, // base 64 later
-      joined: false,
+      Item: {
+        Group_id: unique_id,
+        category: category,
+        description: description,
+        group_leader: DUMMY_SID,
+        group_name: name,
+        img_s3_url: imgSrc, // base 64 later
+        joined: false,
+      },
     };
 
+    console.log(data);
     axios
       .put("http://localhost:8080/create-group", JSON.stringify(data), {
         // withCredentials: true,
@@ -39,7 +41,7 @@ const CreateGroup = () => {
         console.log(response);
       })
       .catch((err) => {
-        console.log("Error:", err);
+        console.log("Error:", err.response.data);
       });
   };
 
@@ -49,14 +51,6 @@ const CreateGroup = () => {
   const [imgSrc, setImgSrc] = useState("");
 
   const toast = useRef(null);
-  const onUpload = () => {
-    console.log(toast);
-    toast.current.show({
-      severity: "info",
-      summary: "Success",
-      detail: "File Uploaded",
-    });
-  };
 
   const customBase64Uploader = async (event) => {
     // convert file to base64 encoded
@@ -68,20 +62,8 @@ const CreateGroup = () => {
 
     reader.onloadend = function () {
       const base64data = reader.result;
-      console.log(reader.result);
+      setImgSrc(reader.result);
     };
-  };
-
-  const submitForm = (event) => {
-    console.log(name);
-    console.log(name, description, category, imgSrc);
-  };
-
-  const imageUploadHandler = ({ files }) => {
-    const [file] = files;
-    const temp_url = URL.createObjectURL(file);
-    console.log(temp_url);
-    setImgSrc(temp_url);
   };
 
   return (
