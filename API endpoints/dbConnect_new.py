@@ -389,6 +389,12 @@ def get_session_by_sid():
 
 @app.route("/update-join-status-by-id", methods=['PUT'])
 def update_join_status_by_sid():
+    '''
+    sample json
+    {
+        "id": "cde002"
+    }
+    '''
     data = request.get_json()
     id = data['id']
 
@@ -400,11 +406,63 @@ def update_join_status_by_sid():
         session_id = data['session_id']
         session_id_s = session_id['S']
         if session_id_s == id:
+            print(data)
             data['joined'] = 'true'
-            requests.put(SESSION_URL, json=data)
+            data['session_max_members'] = int(data['session_max_members']['N'])
+            data['session_duration'] = int(data['session_duration']['N'])
+            data['group_id'] = data['group_id']['S']
+            data['session_id'] = data['session_id']['S']
+            data['session_start_date'] = data['session_start_date']['S']
+            data['session_end_date'] = data['session_end_date']['S']
+            data['session_location'] = data['session_location']['S']
+            data['group_name'] = data['group_name']['S']
+            data['session_info'] = data['session_info']['S']
+            data['img_s3_url'] = data['img_s3_url']['S']
+            print(data)
+            new_json = {}
+            new_json['Item'] = data
+            print(new_json)
+            requests.put(SESSION_URL, json=new_json)
             return "Success", 201
-        
-        
+       
+
+@app.route("/leave-session-by-id", methods=['PUT'])
+def leave_session_by_id():
+    '''
+    sample json
+    {
+        "id": "cde002"
+    }
+    '''
+    data = request.get_json()
+    id = data['id']
+
+    db_data = requests.get(SESSION_URL).json()
+    all_data = db_data['body']
+    all_data_json = json.loads(all_data)
+    all_data_items = all_data_json['Items']
+    for data in all_data_items:
+        session_id = data['session_id']
+        session_id_s = session_id['S']
+        if session_id_s == id:
+            print(data)
+            data['joined'] = 'false'
+            data['session_max_members'] = int(data['session_max_members']['N'])
+            data['session_duration'] = int(data['session_duration']['N'])
+            data['group_id'] = data['group_id']['S']
+            data['session_id'] = data['session_id']['S']
+            data['session_start_date'] = data['session_start_date']['S']
+            data['session_end_date'] = data['session_end_date']['S']
+            data['session_location'] = data['session_location']['S']
+            data['group_name'] = data['group_name']['S']
+            data['session_info'] = data['session_info']['S']
+            data['img_s3_url'] = data['img_s3_url']['S']
+            print(data)
+            new_json = {}
+            new_json['Item'] = data
+            print(new_json)
+            requests.put(SESSION_URL, json=new_json)
+            return "Success", 201
 
 @app.route("/delete-session-by-id", methods=['DELETE'])
 def delete_session_by_id():
