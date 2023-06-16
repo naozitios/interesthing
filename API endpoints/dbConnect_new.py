@@ -161,9 +161,14 @@ def get_all_groups_by_joined():
     for data in all_data_items:
         join_status = data['joined']
         print(join_status)
-        join_status_s = join_status['BOOL']
-        if join_status_s == 'true':
-            new_arr.append(data)
+        try:
+            join_status_s = join_status['BOOL']
+            if join_status_s:
+                new_arr.append(data)
+        except:
+            join_status_s = join_status['S']
+            if join_status_s == 'true':
+                new_arr.append(data)
 
     return json.dumps(new_arr), 201
 
@@ -278,9 +283,14 @@ def get_all_session_by_joined():
     new_arr = []
     for data in all_data_items:
         join_status = data['joined']
-        join_status_s = join_status['S']
-        if join_status_s == 'true':
-            new_arr.append(data)
+        try:
+            join_status_s = join_status['BOOL']
+            if join_status_s:
+                new_arr.append(data)
+        except:
+            join_status_s = join_status['S']
+            if join_status_s == 'true':
+                new_arr.append(data)
 
     return json.dumps(new_arr), 201
 

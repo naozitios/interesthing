@@ -33,7 +33,7 @@ function App() {
               // element={<Review />}
             />
             <Route
-              path="/valulrant"
+              path="/group/:groupID"
               element={<GroupPage />}
               //NOT enabling the user authentication check first because i(yuhao) cannot log in
               // element={<Review />}
