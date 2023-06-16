@@ -6,11 +6,20 @@ import { Button } from "primereact/button";
 const MOCK_SESSIONS = [
   {
     name: <p>Football</p>,
-    where: <p>Kallang Cage</p>,
+    where: (
+      <p>
+        <a
+          href="https://goo.gl/maps/ub2zGMmUwCvA7Rg28"
+          target="_blank"
+        >
+          Kallang Cage
+        </a>
+      </p>
+    ),
     when: <p>17/12/2023 -- 17:00 to 18:00</p>,
     duration: <p>1 hour</p>,
     info: (
-      <p>Session for people to chill and have fun after a long day of work </p>
+      <p>Session for people to chill and have fun after a long day of work</p>
     ),
     image: (
       <img
@@ -22,7 +31,13 @@ const MOCK_SESSIONS = [
   },
   {
     name: <p>Flower Arrangement</p>,
-    where: <p>Orchard Convention Centre Level 7 Hall 2</p>,
+    where: (
+      <p>
+        <a href="https://goo.gl/maps/SFjDN2RTnqkfUZ9K6" target="_blank">
+          Raffles City Convention Centre Level 7 Hall 2
+        </a>
+      </p>
+    ),
     when: <p>18/12/2023 -- 18:00 to 19:00</p>,
     duration: <p>1 hour</p>,
     info: (
@@ -40,7 +55,13 @@ const MOCK_SESSIONS = [
   },
   {
     name: <p>Chess Openings 101</p>,
-    where: <p>88 Market Street, #30-00 CapitaSpring</p>,
+    where: (
+      <p>
+        <a href="https://goo.gl/maps/AiKqTCtH3ikQmn1c6" target="_blank">
+          88 Market Street, #30-00 CapitaSpring
+        </a>
+      </p>
+    ),
     when: <p>18/12/2023 -- 09:00 to 11:00</p>,
     duration: <p>2 hours</p>,
     info: (
