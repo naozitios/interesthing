@@ -33,14 +33,20 @@ const GroupPage = () => {
         })
         const json = await response.json()
     }
-
+    const headers = { 'Access-Control-Allow-Origin': '*' }
     useEffect(() => {
         const fetchSessions = async () => {
-            const response = await fetch('')
+            const response = await fetch('http://localhost:8080/get-all-data', {headers: { 
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json'
+              }})
             const json = await response.json()
         
             if (response.ok) {
-              setSessions(json)
+                console.log(json['body'])
+                setSessions(json)
+            } else {
+                console.log('failed')
             }
           }
         fetchSessions()
@@ -67,7 +73,7 @@ const GroupPage = () => {
                             </div>
                         </div>
                         <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-                            {!session.joined ? <Button icon="pi pi-plus" className="p-button-rounded" onClick={() => {handleJoin();}} ></Button> : <Button disabled="true" icon="pi pi-check" className="p-button-rounded p-button-success"></Button>}
+                            {!session.joined ? <Button icon="pi pi-plus" className="p-button-rounded" onClick={() => {handleJoin();}} ></Button> : <Button disabled={true} icon="pi pi-check" className="p-button-rounded p-button-success"></Button>}
                         </div>
                     </div>
                 </div>
