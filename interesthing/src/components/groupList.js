@@ -6,17 +6,17 @@ import { useState } from "react";
 
 
 
-const GroupList = ({ group }) => {
+const GroupList = ({ group, hideButtons }) => {
 // const GroupList = () => {
     const [hideCard, setHideCard] = useState(false);
     const handleLeave = async(e) => {
         setHideCard(true);
-        const response = await fetch('', {
-            method: 'POST',
+        const response = await fetch('http://localhost:8080/leave-group-by-id', {
+            method: 'PUT',
             headers: { 
                 'Content-Type': 'application/json'
               },
-            body: JSON.stringify()
+            body: JSON.stringify({ id: group.Group_id.S })
         })
         const json = await response.json()
     }
@@ -37,15 +37,15 @@ const GroupList = ({ group }) => {
     const navigate = useNavigate();
     const footer = (
         <div className="flex flex-wrap justify-content-end gap-2">
-            <Button label="More Info" className="p-button-outlined p-button-secondary" 
+            {!hideButtons ? <Button label="More Info" className="p-button-outlined p-button-secondary" 
             onClick={() => {
                 navigate(`/group/${group.Group_id.S}`);
-            }}/>
-            <Button 
+            }}/> : <div></div>}
+            {!hideButtons ? <Button 
             label="Leave group" className="p-button-danger" 
             onClick={() => {
                 handleLeave();
-            }}/>
+            }}/> : <div></div>}
         </div>
     );
 
