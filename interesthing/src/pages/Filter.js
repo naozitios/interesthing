@@ -8,53 +8,13 @@ import { Button } from "primereact/button";
 
 import axios from "axios";
 
+const ML_PORT = "127.0.0.1:2100";
+const HOST_PORT = 8080;
+
 const filters = [
   { value: "gaming", label: "Gaming" },
   { value: "music", label: "Music" },
   { value: "food", label: "Food" },
-];
-
-const groups = [
-  {
-    id: 1,
-    name: "Earthen Bottle",
-    href: "#",
-    price: "$48",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
-    imageAlt:
-      "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-  },
-  {
-    id: 2,
-    name: "Nomad Tumbler",
-    href: "#",
-    price: "$35",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg",
-    imageAlt:
-      "Olive drab green insulated bottle with flared screw lid and flat top.",
-  },
-  {
-    id: 3,
-    name: "Focus Paper Refill",
-    href: "#",
-    price: "$89",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg",
-    imageAlt:
-      "Person using a pen to cross a task off a productivity paper card.",
-  },
-  {
-    id: 4,
-    name: "Machined Mechanical Pencil",
-    href: "#",
-    price: "$35",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg",
-    imageAlt:
-      "Hand holding black machined steel mechanical pencil with brass tip and top.",
-  },
 ];
 
 function classNames(...classes) {
@@ -67,9 +27,27 @@ const footer = (
   </div>
 );
 
+const mapToObject = (map) => {
+  let obj = {};
+  for (const [k, v] of Object.entries(map)) {
+    obj[k] = map[k]["S"];
+  }
+  return obj;
+};
+
 const Filter = () => {
-  const fetchGroups = async () =>
-    await axios.get(`http://127.0.0.1:8080/?hobby=${search}`);
+  const fetchGroups = async () => {
+    const hobbiesResp = await axios.get(`http://${ML_PORT}/?hobby=${search}`);
+    const hobbies = hobbiesResp.data["recommendations"];
+    const groupsResp = await axios.post(
+      `http://localhost:${HOST_PORT}/get-all-groups-by-group_name`,
+      {
+        group_names: hobbies.join(","),
+      }
+    );
+    const data = groupsResp.data.map((group) => mapToObject(group));
+    return data;
+  };
 
   const { data, refetch } = useQuery("groupsData", fetchGroups, {
     refetchOnWindowFocus: false,
@@ -99,7 +77,6 @@ const Filter = () => {
     refetch();
   };
 
-  console.log(data);
   return (
     <div className="pt-10">
       <div className="mx-auto max-w-7xl sm:px-2 lg:px-8">
@@ -329,28 +306,25 @@ const Filter = () => {
             </h2>
 
             <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 justify-center">
-              {groups.map(({ title, description, leaders, imageUrl }) => (
+              {data.map((group) => (
                 <div className="card flex justify-content-center">
                   <div className="flex-column">
                     <Card
-                      title={title}
-                      subTitle={
-                        leaders?.length ? `Leaders: ${leaders?.join(", ")}` : ""
-                      }
+                      title={group["group_name"]}
+                      subTitle={`Leader: ${group["group_leader"]}`}
                       footer={footer}
                       header={
                         <img
                           alt="Card"
                           src={
-                            imageUrl ??
-                            "https://image.cnbcfm.com/api/v1/image/106560246-1591029813185copy-of-v_brand_promo_horizontal_offwhite.jpg?v=1672280691&w=1920&h=1080"
+                            "https://assets2-my.umbc.edu/system/shared/thumbnails/events/000/085/869/5b24134aa4f14037055b6814773056d4/xxlarge.jpg?1598897267"
                           }
                           height="300vw"
                         />
                       }
                       className="md:w-30rem mt-3 mb-2"
                     >
-                      <p className="m-0">{description}</p>
+                      <p className="m-0">{group.description}</p>
                     </Card>
                   </div>
                 </div>
