@@ -79,7 +79,7 @@ const Home = () => {
           </h2>
         </div>
       </div>
-      <h1 className="title2">Recommended Sessions</h1>
+      <h1 className="pl-8 title2">Recommended Sessions</h1>
       <div className="flex flex-row flex-wrap gap-7 align-items-center justify-content-center p-7">
         {MOCK_SESSIONS.map((item, index) => (
           <Card
