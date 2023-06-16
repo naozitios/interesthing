@@ -10,34 +10,38 @@ import { Button } from "primereact/button";
 
 const CreateGroup = () => {
   const DUMMY_SID = "G123456";
-  const DUMMY_IMG = "fill_in_l8tr";
 
   const onFormSubmit = (e) => {
     e.preventDefault();
-
-    const data = new FormData();
-
     const unique_id = uuid();
-    data.append("Group_id", unique_id);
-    data.append("category", category);
-    data.append("description", description);
-    data.append("group_leader", DUMMY_SID);
-    data.append("group_name", name);
-    data.append("img_s3_url", DUMMY_IMG);
+
+    const data = {
+      Item: {
+        Group_id: unique_id,
+        category: category,
+        description: description,
+        group_leader: DUMMY_SID,
+        group_name: name,
+        img_s3_url: imgSrc, // base 64 later
+        joined: false,
+      },
+    };
 
     console.log(data);
-
     axios
       .put("http://localhost:8080/create-group", JSON.stringify(data), {
+        // withCredentials: true,
+        credentials: "same-origin",
         headers: {
           "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
         },
       })
       .then((response) => {
         console.log(response);
       })
       .catch((err) => {
-        console.log("Error:", err);
+        console.log("Error:", err.response.data);
       });
   };
 
@@ -47,30 +51,25 @@ const CreateGroup = () => {
   const [imgSrc, setImgSrc] = useState("");
 
   const toast = useRef(null);
-  const onUpload = () => {
-    console.log(toast);
-    toast.current.show({
-      severity: "info",
-      summary: "Success",
-      detail: "File Uploaded",
-    });
-  };
 
-  const submitForm = (event) => {
-    console.log(name);
-    console.log(name, description, category, imgSrc);
-  };
+  const customBase64Uploader = async (event) => {
+    // convert file to base64 encoded
+    const file = event.files[0];
+    const reader = new FileReader();
+    let blob = await fetch(file.objectURL).then((r) => r.blob()); //blob:url
 
-  const imageUploadHandler = ({ files }) => {
-    const [file] = files;
-    const temp_url = URL.createObjectURL(file);
-    console.log(temp_url);
-    setImgSrc(temp_url);
+    reader.readAsDataURL(blob);
+
+    reader.onloadend = function () {
+      const base64data = reader.result;
+      setImgSrc(reader.result);
+    };
   };
 
   return (
     <div className="flex flex-column align-items-center">
-      <h1>Create New Interest Group</h1>
+      <h1 className="text-3xl">Create New Interest Group</h1>
+      <br />
       <div className="flex flex-column w-6 justify-content-center gap-3 field group">
         <div className="flex flex-column gap-1">
           <label htmlFor="username">Interest Group Name *</label>
@@ -83,13 +82,20 @@ const CreateGroup = () => {
         </div>
 
         <div className="flex flex-column gap-1">
-          <label htmlFor="username">Category *</label>
-          <InputText
-            id="groupname"
-            aria-describedby="groupname-help"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          />
+          <div className="p-fluid">
+            <div className="p-field">
+              <label className="p-field-label" htmlFor="username">
+                Category *
+              </label>
+
+              <InputText
+                id="groupname"
+                aria-describedby="groupname-help"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              />
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-column gap-1">
@@ -109,13 +115,9 @@ const CreateGroup = () => {
             name="demo[]"
             url="/api/upload"
             accept="image/*"
-            onChange={(event) => {
-              console.log(event.target);
-            }}
+            customUpload
+            uploadHandler={customBase64Uploader}
             maxFileSize={1000000}
-            onUpload={onUpload}
-            customUpload={true}
-            uploadHandler={imageUploadHandler}
           />
         </div>
       </div>
