@@ -16,7 +16,7 @@ const MOCK_SESSIONS = [
       <img
         alt="Card"
         src="https://corsivacdncontent.blob.core.windows.net/thecage/kallang/kl-5-a-side-2.jpg"
-        height="300vw"
+        class="h-80"
       />
     ),
   },
@@ -34,7 +34,7 @@ const MOCK_SESSIONS = [
       <img
         alt="Card"
         src="https://www.marthastewart.com/thmb/rQl9aSHswycno7AMQOtffvt7w0I=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/flower-arrangement-blue-103343804-onecms-horiz-0223-257c5c7d9536496fa4c89549808d5c56.jpg"
-        height="300vw"
+        class="h-80"
       />
     ),
   },
@@ -52,7 +52,7 @@ const MOCK_SESSIONS = [
       <img
         alt="Card"
         src="https://images.unsplash.com/photo-1610633389918-7d5b62977dc3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2050&q=80"
-        height="300vw"
+        class="h-80"
       />
     ),
   },

@@ -21,10 +21,18 @@ const GroupList = ({ group }) => {
         const json = await response.json()
     }
     const header = (
-        <img alt="Card" src="https://image.cnbcfm.com/api/v1/image/106560246-1591029813185copy-of-v_brand_promo_horizontal_offwhite.jpg?v=1672280691&w=1920&h=1080" height="300vw"/>
+      <img
+        alt="Card"
+        src="https://image.cnbcfm.com/api/v1/image/106560246-1591029813185copy-of-v_brand_promo_horizontal_offwhite.jpg?v=1672280691&w=1920&h=1080"
+        class="h-80"
+      />
     );
     const header2 = (
-        <img alt="Card" src="https://www.shutterstock.com/image-photo/small-decoration-plants-glass-bottle-260nw-1776910616.jpg" height="300vw"/>
+      <img
+        alt="Card"
+        src="https://cdn.shopify.com/s/files/1/0556/2053/4441/files/Image_1_-_Building_Your_First_Terrarium_700x700.png?v=1647499607"
+        class="h-80"
+      />
     );
     const navigate = useNavigate();
     const footer = (
