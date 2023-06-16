@@ -6,23 +6,35 @@ import { Button } from "primereact/button";
 const MOCK_SESSIONS = [
   {
     name: <p>Football</p>,
-    where: <p>Kallang Cage</p>,
+    where: (
+      <p>
+        <a href="https://goo.gl/maps/ub2zGMmUwCvA7Rg28" target="_blank">
+          Kallang Cage
+        </a>
+      </p>
+    ),
     when: <p>17/12/2023 -- 17:00 to 18:00</p>,
     duration: <p>1 hour</p>,
     info: (
-      <p>Session for people to chill and have fun after a long day of work </p>
+      <p>Session for people to chill and have fun after a long day of work</p>
     ),
     image: (
       <img
         alt="Card"
         src="https://corsivacdncontent.blob.core.windows.net/thecage/kallang/kl-5-a-side-2.jpg"
-        height="300vw"
+        class="h-80"
       />
     ),
   },
   {
     name: <p>Flower Arrangement</p>,
-    where: <p>Orchard Convention Centre Level 7 Hall 2</p>,
+    where: (
+      <p>
+        <a href="https://goo.gl/maps/SFjDN2RTnqkfUZ9K6" target="_blank">
+          Raffles City Convention Centre Level 7 Hall 2
+        </a>
+      </p>
+    ),
     when: <p>18/12/2023 -- 18:00 to 19:00</p>,
     duration: <p>1 hour</p>,
     info: (
@@ -34,13 +46,19 @@ const MOCK_SESSIONS = [
       <img
         alt="Card"
         src="https://www.marthastewart.com/thmb/rQl9aSHswycno7AMQOtffvt7w0I=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/flower-arrangement-blue-103343804-onecms-horiz-0223-257c5c7d9536496fa4c89549808d5c56.jpg"
-        height="300vw"
+        class="h-80"
       />
     ),
   },
   {
     name: <p>Chess Openings 101</p>,
-    where: <p>88 Market Street, #30-00 CapitaSpring</p>,
+    where: (
+      <p>
+        <a href="https://goo.gl/maps/AiKqTCtH3ikQmn1c6" target="_blank">
+          88 Market Street, #30-00 CapitaSpring
+        </a>
+      </p>
+    ),
     when: <p>18/12/2023 -- 09:00 to 11:00</p>,
     duration: <p>2 hours</p>,
     info: (
@@ -52,7 +70,7 @@ const MOCK_SESSIONS = [
       <img
         alt="Card"
         src="https://images.unsplash.com/photo-1610633389918-7d5b62977dc3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2050&q=80"
-        height="300vw"
+        class="h-80"
       />
     ),
   },
@@ -66,7 +84,7 @@ const footer = (
 
 const Home = () => {
   return (
-    <>
+    <div className="home-container">
       <div className="home-container">
         <div className="overlay">
           <h1 className="title">
@@ -79,7 +97,7 @@ const Home = () => {
           </h2>
         </div>
       </div>
-      <h1 className="title2">Recommended Sessions</h1>
+      <h1 className="pl-8 title2">Recommended Sessions</h1>
       <div className="flex flex-row flex-wrap gap-7 align-items-center justify-content-center p-7">
         {MOCK_SESSIONS.map((item, index) => (
           <Card
@@ -95,7 +113,7 @@ const Home = () => {
           </Card>
         ))}
       </div>
-    </>
+    </div>
   );
 };
 
