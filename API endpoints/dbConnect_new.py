@@ -43,7 +43,7 @@ def create_group():
 
 
 @app.route("/create-group-w-img", methods=['PUT'])
-def create_group():
+def create_group_with_image():
     '''
     sample json 
     {
