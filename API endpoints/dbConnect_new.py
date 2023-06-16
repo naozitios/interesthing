@@ -159,8 +159,11 @@ def get_all_groups_by_joined():
     all_data_items = all_data_json['Items']
     new_arr = []
     for data in all_data_items:
-        join_status = data['joined']
-        print(join_status)
+        try:
+            join_status = data['joined']
+            print(join_status)
+        except:
+            continue
         try:
             join_status_s = join_status['BOOL']
             if join_status_s:
