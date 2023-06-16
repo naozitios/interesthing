@@ -450,8 +450,8 @@ def leave_session_by_id():
         if session_id_s == id:
             print(data)
             data['joined'] = 'false'
-            data['session_max_members'] = data['session_max_members']['N']
-            data['session_duration'] = data['session_duration']['N']
+            data['session_max_members'] = int(data['session_max_members']['N'])
+            data['session_duration'] = int(data['session_duration']['N'])
             data['group_id'] = data['group_id']['S']
             data['session_id'] = data['session_id']['S']
             data['session_start_date'] = data['session_start_date']['S']

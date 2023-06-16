@@ -22,12 +22,11 @@ const CreateGroup = () => {
         description: description,
         group_leader: DUMMY_SID,
         group_name: name,
-        img_s3_url: imgSrc, // base 64 later
+        img_s3_url: "fill_l8tr",
         joined: false,
       },
     };
 
-    console.log(data);
     axios
       .put("http://localhost:8080/create-group", JSON.stringify(data), {
         // withCredentials: true,
@@ -48,7 +47,8 @@ const CreateGroup = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState([]);
-  const [imgSrc, setImgSrc] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imgData, setImgData] = useState("");
 
   const toast = useRef(null);
 
@@ -59,20 +59,26 @@ const CreateGroup = () => {
     let blob = await fetch(file.objectURL).then((r) => r.blob()); //blob:url
 
     reader.readAsDataURL(blob);
+    setSelectedImage(blob);
 
     reader.onloadend = function () {
       const base64data = reader.result;
-      setImgSrc(reader.result);
+      setImgData(reader.result);
     };
   };
 
   return (
-    <div className="flex flex-column align-items-center">
-      <h1 className="text-3xl">Create New Interest Group</h1>
+    <div className="flex flex-column align-items-center ">
       <br />
-      <div className="flex flex-column w-6 justify-content-center gap-3 field group">
+      <h1 className="text-2xl font-bold tracking-tight text-gray-800 sm:text-3x">
+        Create New Interest Group
+      </h1>
+      <br />
+      <div className="flex flex-column w-5 justify-content-center gap-3 field group">
         <div className="flex flex-column gap-1">
-          <label htmlFor="username">Interest Group Name *</label>
+          <label htmlFor="username" className="mt-2 text-md text-gray-600">
+            Interest Group Name *
+          </label>
           <InputText
             id="groupname"
             aria-describedby="groupname-help"
@@ -82,24 +88,22 @@ const CreateGroup = () => {
         </div>
 
         <div className="flex flex-column gap-1">
-          <div className="p-fluid">
-            <div className="p-field">
-              <label className="p-field-label" htmlFor="username">
-                Category *
-              </label>
+          <label className="mt-2 text-md text-gray-600" htmlFor="username">
+            Category *
+          </label>
 
-              <InputText
-                id="groupname"
-                aria-describedby="groupname-help"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              />
-            </div>
-          </div>
+          <InputText
+            id="groupname"
+            aria-describedby="groupname-help"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          />
         </div>
 
         <div className="flex flex-column gap-1">
-          <label htmlFor="groupdesc">Description *</label>
+          <label htmlFor="groupdesc" className="mt-2 text-md text-gray-600">
+            Description *
+          </label>
           <InputTextarea
             id="groupdesc"
             aria-describedby="groupdesc-help"
@@ -109,6 +113,16 @@ const CreateGroup = () => {
         </div>
 
         <div className="flex flex-column gap-1">
+          {selectedImage && (
+            <div>
+              <img
+                alt="not found"
+                width={"250px"}
+                src={URL.createObjectURL(selectedImage)}
+              />
+              <br />
+            </div>
+          )}
           <Toast ref={toast}></Toast>
           <FileUpload
             mode="basic"
@@ -118,6 +132,8 @@ const CreateGroup = () => {
             customUpload
             uploadHandler={customBase64Uploader}
             maxFileSize={1000000}
+            auto
+            chooseLabel="Choose Image"
           />
         </div>
       </div>

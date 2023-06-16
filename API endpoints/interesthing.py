@@ -45,7 +45,8 @@ hobbylistdf2 = hobbylist[hobbylist['Hobby-name'].isin(k)]
 @app.route("/")
 def recommend():
     hobby = request.args.get("hobby").lower()
-    embedding = embeddings_dict[hobby]
+    key = 'running' if hobby not in embeddings_dict else hobby
+    embedding = embeddings_dict[key]
     mylst = list(hobbylistdf2['Hobby-name'])
     # remove duplicates from list # only return recommendations that are existing groups
     final = list(set([item for item in mylst if item in group_names]))
