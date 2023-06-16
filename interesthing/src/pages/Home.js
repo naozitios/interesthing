@@ -8,10 +8,7 @@ const MOCK_SESSIONS = [
     name: <p>Football</p>,
     where: (
       <p>
-        <a
-          href="https://goo.gl/maps/ub2zGMmUwCvA7Rg28"
-          target="_blank"
-        >
+        <a href="https://goo.gl/maps/ub2zGMmUwCvA7Rg28" target="_blank">
           Kallang Cage
         </a>
       </p>
@@ -87,7 +84,7 @@ const footer = (
 
 const Home = () => {
   return (
-    <>
+    <div className="home-container">
       <div className="home-container">
         <div className="overlay">
           <h1 className="title">
@@ -116,7 +113,7 @@ const Home = () => {
           </Card>
         ))}
       </div>
-    </>
+    </div>
   );
 };
 
