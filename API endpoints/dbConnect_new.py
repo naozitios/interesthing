@@ -41,7 +41,7 @@ def create_group():
     data = request.get_json()
     req = requests.put(GROUP_URL, json=data)
     req_data = req.json()
-    return req_data['statusCode']
+    return str(req_data['statusCode'])
 
 
 @app.route("/create-group-w-img", methods=['PUT'])
