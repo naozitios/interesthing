@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import { Dialog, Disclosure, Popover, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -8,10 +8,105 @@ import { Button } from "primereact/button";
 
 import axios from "axios";
 
+const FilterGroups = (input) => {
+  const [filtered, setFiltered] = useState();
+  useEffect(() => {
+    const filter = async () => {
+      const response = await fetch("http://127.0.0.1:2100/?hobby=" + input);
+      const json = await response.json();
+
+      if (response.ok) {
+        console.log(json);
+        setFiltered(json);
+      } else {
+        console.log("failed");
+      }
+    };
+    filter();
+  }, []);
+
+  return filtered;
+};
+
 const filters = [
   { value: "gaming", label: "Gaming" },
   { value: "music", label: "Music" },
   { value: "food", label: "Food" },
+];
+
+const variables = [
+  {
+    Group_id: "def011-0b50-11ee-be56-0242ac121232",
+    category: "sports",
+    description: "Fishing for fun!",
+    group_leader: "Bill Nolan",
+    group_name: "fishing",
+    img_s3_url: "s3.url.com",
+    joined: "true",
+  },
+  {
+    Group_id: "def010-0b50-11ee-be56-0242ac121232",
+    category: "sports",
+    description: "Feel at home with the waves",
+    group_leader: "Kelly Slater",
+    group_name: "surfing",
+    img_s3_url: "s3.url.com",
+    joined: "true",
+  },
+  {
+    Group_id: "def009-0b50-11ee-be56-0242ac121232",
+    category: "sports",
+    description: "Tennis for fun!",
+    group_leader: "Serena Williams",
+    group_name: "tennis",
+    img_s3_url: "s3.url.com",
+    joined: "true",
+  },
+  {
+    Group_id: "def007-0b50-11ee-be56-0242ac121232",
+    category: "education",
+    description: "Teach to inspire",
+    group_leader: "Sir Ken Robinson",
+    group_name: "teaching",
+    img_s3_url: "s3.url.com",
+    joined: "false",
+  },
+  {
+    Group_id: "def006-0b50-11ee-be56-0242ac121232",
+    category: "sports",
+    description: "Handball for fun!",
+    group_leader: "Mikkel Hansen",
+    group_name: "handball",
+    img_s3_url: "s3.url.com",
+    joined: "false",
+  },
+  {
+    Group_id: "def005-0b50-11ee-be56-0242ac121232",
+    category: "sports",
+    description: "Softball for fun!",
+    group_leader: "Jennie Finch",
+    group_name: "softball",
+    img_s3_url: "s3.url.com",
+    joined: "true",
+  },
+  {
+    Group_id: "def004-0b50-11ee-be56-0242ac121232",
+    category: "sports",
+    description: "Volleyball for life",
+    group_leader: "Kerri Walsh Jennings",
+    group_name: "volleyball",
+    img_s3_url: "s3.url.com",
+    joined: "true",
+  },
+  {
+    Group_id: "def003-0b50-11ee-be56-0242ac121232",
+    category: "sports",
+    description: "Soccer is the best",
+    group_leader: "Lionel Messi",
+    group_name: "soccer",
+    img_s3_url: "s3.url.com",
+    joined: "true",
+  },
 ];
 
 const groups = [
@@ -69,8 +164,8 @@ const footer = (
 
 const Filter = () => {
   const fetchGroups = async () =>
-    await axios.get(`http://127.0.0.1:8080/?hobby=${search}`);
-
+    await axios.get(`http://127.0.0.1:2100/?hobby=${search}`);
+  
   const { data, refetch } = useQuery("groupsData", fetchGroups, {
     refetchOnWindowFocus: false,
     enabled: false,
@@ -96,6 +191,13 @@ const Filter = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(search);
+    const filtered = async(e) => {
+      const response = await FilterGroups(search);
+      const json = await response.json();
+
+    }
+    console.log(filtered);
     refetch();
   };
 
@@ -327,30 +429,31 @@ const Filter = () => {
             <h2 id="groups-heading" className="sr-only">
               Products
             </h2>
-
             <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 justify-center">
-              {groups.map(({ title, description, leaders, imageUrl }) => (
+              {variables.map((items, index) => (
                 <div className="card flex justify-content-center">
                   <div className="flex-column">
                     <Card
-                      title={title}
+                      title={items.group_name}
                       subTitle={
-                        leaders?.length ? `Leaders: ${leaders?.join(", ")}` : ""
+                        items.group_leader?.length
+                          ? `Leaders: ${items.group_leader}`
+                          : ""
                       }
                       footer={footer}
-                      header={
-                        <img
-                          alt="Card"
-                          src={
-                            imageUrl ??
-                            "https://image.cnbcfm.com/api/v1/image/106560246-1591029813185copy-of-v_brand_promo_horizontal_offwhite.jpg?v=1672280691&w=1920&h=1080"
-                          }
-                          height="300vw"
-                        />
-                      }
+                      /*</div>header={
+                          <img
+                            alt="Card"
+                            src={
+                              imageUrl ??
+                              "https://image.cnbcfm.com/api/v1/image/106560246-1591029813185copy-of-v_brand_promo_horizontal_offwhite.jpg?v=1672280691&w=1920&h=1080"
+                            }
+                            height="300vw"
+                          />
+                        }*/
                       className="md:w-30rem mt-3 mb-2"
                     >
-                      <p className="m-0">{description}</p>
+                      <p className="m-0">{items.description}</p>
                     </Card>
                   </div>
                 </div>
