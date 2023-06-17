@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState } from "react";
 import { useQuery } from "react-query";
 import { Dialog, Disclosure, Popover, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -8,148 +8,13 @@ import { Button } from "primereact/button";
 
 import axios from "axios";
 
-const FilterGroups = (input) => {
-  const [filtered, setFiltered] = useState();
-  useEffect(() => {
-    const filter = async () => {
-      const response = await fetch("http://127.0.0.1:2100/?hobby=" + input);
-      const json = await response.json();
-
-      if (response.ok) {
-        console.log(json);
-        setFiltered(json);
-      } else {
-        console.log("failed");
-      }
-    };
-    filter();
-  }, []);
-
-  return filtered;
-};
+const ML_PORT = "127.0.0.1:2100";
+const HOST_PORT = 8080;
 
 const filters = [
   { value: "gaming", label: "Gaming" },
   { value: "music", label: "Music" },
   { value: "food", label: "Food" },
-];
-
-const variables = [
-  {
-    Group_id: "def011-0b50-11ee-be56-0242ac121232",
-    category: "sports",
-    description: "Fishing for fun!",
-    group_leader: "Bill Nolan",
-    group_name: "fishing",
-    img_s3_url: "s3.url.com",
-    joined: "true",
-  },
-  {
-    Group_id: "def010-0b50-11ee-be56-0242ac121232",
-    category: "sports",
-    description: "Feel at home with the waves",
-    group_leader: "Kelly Slater",
-    group_name: "surfing",
-    img_s3_url: "s3.url.com",
-    joined: "true",
-  },
-  {
-    Group_id: "def009-0b50-11ee-be56-0242ac121232",
-    category: "sports",
-    description: "Tennis for fun!",
-    group_leader: "Serena Williams",
-    group_name: "tennis",
-    img_s3_url: "s3.url.com",
-    joined: "true",
-  },
-  {
-    Group_id: "def007-0b50-11ee-be56-0242ac121232",
-    category: "education",
-    description: "Teach to inspire",
-    group_leader: "Sir Ken Robinson",
-    group_name: "teaching",
-    img_s3_url: "s3.url.com",
-    joined: "false",
-  },
-  {
-    Group_id: "def006-0b50-11ee-be56-0242ac121232",
-    category: "sports",
-    description: "Handball for fun!",
-    group_leader: "Mikkel Hansen",
-    group_name: "handball",
-    img_s3_url: "s3.url.com",
-    joined: "false",
-  },
-  {
-    Group_id: "def005-0b50-11ee-be56-0242ac121232",
-    category: "sports",
-    description: "Softball for fun!",
-    group_leader: "Jennie Finch",
-    group_name: "softball",
-    img_s3_url: "s3.url.com",
-    joined: "true",
-  },
-  {
-    Group_id: "def004-0b50-11ee-be56-0242ac121232",
-    category: "sports",
-    description: "Volleyball for life",
-    group_leader: "Kerri Walsh Jennings",
-    group_name: "volleyball",
-    img_s3_url: "s3.url.com",
-    joined: "true",
-  },
-  {
-    Group_id: "def003-0b50-11ee-be56-0242ac121232",
-    category: "sports",
-    description: "Soccer is the best",
-    group_leader: "Lionel Messi",
-    group_name: "soccer",
-    img_s3_url: "s3.url.com",
-    joined: "true",
-  },
-];
-
-const groups = [
-  {
-    id: 1,
-    name: "Earthen Bottle",
-    href: "#",
-    price: "$48",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg",
-    imageAlt:
-      "Tall slender porcelain bottle with natural clay textured body and cork stopper.",
-  },
-  {
-    id: 2,
-    name: "Nomad Tumbler",
-    href: "#",
-    price: "$35",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg",
-    imageAlt:
-      "Olive drab green insulated bottle with flared screw lid and flat top.",
-  },
-  {
-    id: 3,
-    name: "Focus Paper Refill",
-    href: "#",
-    price: "$89",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-03.jpg",
-    imageAlt:
-      "Person using a pen to cross a task off a productivity paper card.",
-  },
-  {
-    id: 4,
-    name: "Machined Mechanical Pencil",
-    href: "#",
-    price: "$35",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-04.jpg",
-    imageAlt:
-      "Hand holding black machined steel mechanical pencil with brass tip and top.",
-  },
 ];
 
 function classNames(...classes) {
@@ -162,10 +27,28 @@ const footer = (
   </div>
 );
 
+const mapToObject = (map) => {
+  let obj = {};
+  for (const [k, v] of Object.entries(map)) {
+    obj[k] = map[k]["S"];
+  }
+  return obj;
+};
+
 const Filter = () => {
-  const fetchGroups = async () =>
-    await axios.get(`http://127.0.0.1:2100/?hobby=${search}`);
-  
+  const fetchGroups = async () => {
+    const hobbiesResp = await axios.get(`http://${ML_PORT}/?hobby=${search}`);
+    const hobbies = hobbiesResp.data["recommendations"];
+    const groupsResp = await axios.post(
+      `http://localhost:${HOST_PORT}/get-all-groups-by-group_name`,
+      {
+        group_names: hobbies.join(","),
+      }
+    );
+    const data = groupsResp.data.map((group) => mapToObject(group));
+    return data;
+  };
+
   const { data, refetch } = useQuery("groupsData", fetchGroups, {
     refetchOnWindowFocus: false,
     enabled: false,
@@ -191,17 +74,9 @@ const Filter = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(search);
-    const filtered = async(e) => {
-      const response = await FilterGroups(search);
-      const json = await response.json();
-
-    }
-    console.log(filtered);
     refetch();
   };
 
-  console.log(data);
   return (
     <div className="pt-10">
       <div className="mx-auto max-w-7xl sm:px-2 lg:px-8">
@@ -430,30 +305,25 @@ const Filter = () => {
               Products
             </h2>
             <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 justify-center">
-              {variables.map((items, index) => (
+              {data.map((group) => (
                 <div className="card flex justify-content-center">
                   <div className="flex-column">
                     <Card
-                      title={items.group_name}
-                      subTitle={
-                        items.group_leader?.length
-                          ? `Leaders: ${items.group_leader}`
-                          : ""
-                      }
+                      title={group["group_name"]}
+                      subTitle={`Leader: ${group["group_leader"]}`}
                       footer={footer}
-                      /*</div>header={
-                          <img
-                            alt="Card"
-                            src={
-                              imageUrl ??
-                              "https://image.cnbcfm.com/api/v1/image/106560246-1591029813185copy-of-v_brand_promo_horizontal_offwhite.jpg?v=1672280691&w=1920&h=1080"
-                            }
-                            height="300vw"
-                          />
-                        }*/
+                      header={
+                        <img
+                          alt="Card"
+                          src={
+                            "https://assets2-my.umbc.edu/system/shared/thumbnails/events/000/085/869/5b24134aa4f14037055b6814773056d4/xxlarge.jpg?1598897267"
+                          }
+                          height="300vw"
+                        />
+                      }
                       className="md:w-30rem mt-3 mb-2"
                     >
-                      <p className="m-0">{items.description}</p>
+                      <p className="m-0">{group.description}</p>
                     </Card>
                   </div>
                 </div>

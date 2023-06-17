@@ -22,7 +22,7 @@ const MyGroups = () => {
   return (
     <div className="flex flex-row flex-wrap gap-7 align-items-center justify-content-center p-7">
       {groups && groups.map(group => (
-          <GroupList group={group} key={group.Group_id.S} />
+          <GroupList group={group} hideButtons={false} key={group.Group_id.S} />
       ))}
     </div>
   )
