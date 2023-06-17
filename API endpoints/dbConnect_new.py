@@ -13,11 +13,6 @@ CORS(app, resources={r"*": {"origins": "*"}})
 
 GROUP_URL = 'https://sko7gkigt1.execute-api.ap-southeast-1.amazonaws.com/prod'
 SESSION_URL = 'https://oay8il00wj.execute-api.ap-southeast-1.amazonaws.com/prod'
-s3 = boto3.client(
-        "s3",
-        aws_access_key_id="AKIAUTHL2FAAGZE5ZR5R",
-        aws_secret_access_key="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"
-    )
 
 
 # Group Functions ------------------------------------------------------------------------
